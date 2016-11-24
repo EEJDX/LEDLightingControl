@@ -52,9 +52,9 @@ def TranslateColorToPWM(RedVal, GreenVal, BlueVal):
     global CurrentGreenPWM
     global CurrentBluePWM
     MaxColorChange = abs(RedVal - CurrentRedPWM)
-    if MaxColorChange > abs(GreenVal - CurrentGreenPWM):
+    if MaxColorChange < abs(GreenVal - CurrentGreenPWM):
         MaxColorChange = abs(GreenVal - CurrentGreenPWM)
-    if MaxColorChange > abs(BlueVal - CurrentBluePWM):
+    if MaxColorChange < abs(BlueVal - CurrentBluePWM):
         MaxColorChange = abs(BlueVal - CurrentBluePWM)
     if MaxColorChange > 0:
         for i in range(0, MaxColorChange):
@@ -82,7 +82,7 @@ def TranslateColorToPWM(RedVal, GreenVal, BlueVal):
                 CurrentBluePWM = CurrentBluePWM + 1
                 if CurrentBluePWM > BlueVal:
                     CurrentBluePWM = BlueVal
-                SetColor(GreenChannel, float(CurrentBluePWM)/255.0)
+                SetColor(BlueChannel, float(CurrentBluePWM)/255.0)
             elif (BlueVal < CurrentBluePWM):
                 CurrentBluePWM = CurrentBluePWM - 1
                 if CurrentBluePWM < BlueVal:
