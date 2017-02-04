@@ -15,9 +15,10 @@ CurrentGreenPWM = 0
 CurrentBluePWM = 0
 
 def LEDLighting():
+    TranslateColorToPWM(0, 0, 0)
     CalculateSyncTimes()
     RunLEDSync()
-#    DaylightSync()
+    #DaylightSync()
 
 
 def DaylightSync():
