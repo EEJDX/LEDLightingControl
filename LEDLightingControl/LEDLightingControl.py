@@ -45,7 +45,7 @@ def DaylightSync():
     #Else set sleep timer until tomorrow and then initate LED timer
     CalculateSyncTimes()
     SecondsUntilTomorrowMorning = (datetime.datetime.combine(TomorrowMorning.date(), datetime.time(3,0,0)) - datetime.datetime.now()).total_seconds()
-    SecondsUntilDawn = (Dawn - datetime.now(pytz.utc)).total_seconds()
+    SecondsUntilDawn = (Dawn - datetime.now(pytz.timezone('US/Central'))).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
@@ -95,7 +95,7 @@ def CalculateSyncTimes():
     #Check to see what datetime it is
     #If current time is before dusk, set intensity appropriately and initiate LED timer
     #Else set sleep timer until tomorrow and then initate LED timer
-    TimeCheck = datetime.datetime.now()
+    TimeCheck = datetime.datetime.now(pytz.timezone('US/Central'))
     TomorrowMorning = TimeCheck + datetime.timedelta(days = 1)
     SecondsUntilTomorrowMorning = (datetime.datetime.combine(TomorrowMorning.date(), datetime.time(3,0,0)) - datetime.datetime.now()).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
@@ -121,13 +121,13 @@ def RunLEDSync():
     SunsetToDusk = (Dusk - Sunset).total_seconds()
     Moonlight = (MoonPhase / 28)
 
-    DawnToSunrise = DawnToSunrise
-    SunriseToNoon = SunriseToNoon
-    NoonToSunset = NoonToSunset
-    SunsetToDusk = SunsetToDusk
+    DawnToSunrise = DawnToSunrise / 10
+    SunriseToNoon = SunriseToNoon / 100
+    NoonToSunset = NoonToSunset / 100
+    SunsetToDusk = SunsetToDusk /10
 
     SleepInterval = 0.01
-    MoonlightTime = 14400
+    MoonlightTime = 300 #14400
 
     print('GOOD MORNING')
 
