@@ -45,7 +45,7 @@ def DaylightSync():
     #Else set sleep timer until tomorrow and then initate LED timer
     CalculateSyncTimes()
     SecondsUntilTomorrowMorning = (datetime.datetime.combine(TomorrowMorning.date(), datetime.time(3,0,0)) - datetime.datetime.now()).total_seconds()
-    SecondsUntilDawn = (Dawn - datetime.now(pytz.timezone('US/Central'))).total_seconds()
+    SecondsUntilDawn = (Dawn - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
