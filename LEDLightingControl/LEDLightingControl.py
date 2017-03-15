@@ -3,6 +3,7 @@ from time import sleep
 from pysolar.solar import *
 from astral import Astral
 import datetime
+import pytz
 
 city_name = 'Dallas'
 latitude_deg = 32.8 # positive in the northern hemisphere
@@ -44,7 +45,7 @@ def DaylightSync():
     #Else set sleep timer until tomorrow and then initate LED timer
     CalculateSyncTimes()
     SecondsUntilTomorrowMorning = (datetime.datetime.combine(TomorrowMorning.date(), datetime.time(3,0,0)) - datetime.datetime.now()).total_seconds()
-    SecondsUntilDawn = (Dawn - datetime.datetime.now()).total_seconds()
+    SecondsUntilDawn = (Dawn - datetime.now(pytz.utc)).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
