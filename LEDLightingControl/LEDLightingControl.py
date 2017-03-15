@@ -16,9 +16,9 @@ CurrentBluePWM = 0
 
 def LEDLighting():
     TranslateColorToPWM(0, 0, 0)
-    CalculateSyncTimes()
-    RunLEDSync()
-    #DaylightSync()
+    #CalculateSyncTimes()
+    #RunLEDSync()
+    DaylightSync()
 
 
 def DaylightSync():
@@ -39,10 +39,10 @@ def DaylightSync():
     global Dusk
     global MoonPhase
 
-    #Check to see what datetime it is
+    #Check to see what datetime is
     #If current time is before dusk, set intensity appropriately and initiate LED timer
     #Else set sleep timer until tomorrow and then initate LED timer
-    CalculateDaylightSyncTimes()
+    CalculateSyncTimes()
     SecondsUntilTomorrowMorning = (datetime.datetime.combine(TomorrowMorning.date(), datetime.time(3,0,0)) - datetime.datetime.now()).total_seconds()
     SecondsUntilDawn = (Dawn - datetime.datetime.now()).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
@@ -50,23 +50,23 @@ def DaylightSync():
     if (TimeCheck - Dusk).total_seconds() > 1:
         print('It is after dusk.  Sleeping until tomorrow (%s), then running LEDSync at dawn.' % str(SecondsUntilTomorrowMorning))
         sleep(SecondsUntilTomorrowMorning)
-        CalculateDaylightSyncTimes()
+        CalculateSyncTimes()
         RunLEDSync()
     elif (TimeCheck - Sunset).total_seconds() > 1:
         print('It is after sunset.  Running LEDSync until dusk.')
-        CalculateDaylightSyncTimes()
+        CalculateSyncTimes()
         RunLEDSync()
     elif (TimeCheck - Noon).total_seconds() > 1:
         print('It is after noon.  Running LEDSync until sunset.')
-        CalculateDaylightSyncTimes()
+        CalculateSyncTimes()
         RunLEDSync()
     elif (TimeCheck - Sunrise).total_seconds() > 1:
         print('It is after sunrise.  Running LEDSync until noon.')
-        CalculateDaylightSyncTimes()
+        CalculateSyncTimes()
         RunLEDSync()
     elif (TimeCheck - Dawn).total_seconds() > 1:
         print('It is after dawn.  Running LEDSync until sunrise.')
-        CalculateDaylightSyncTimes()
+        CalculateSyncTimes()
         RunLEDSync()
     else:
         print('It is not yet dawn.  Sleeping until dawn, then running LEDSync.')
@@ -120,13 +120,13 @@ def RunLEDSync():
     SunsetToDusk = (Dusk - Sunset).total_seconds()
     Moonlight = (MoonPhase / 28)
 
-    DawnToSunrise = DawnToSunrise / 10
-    SunriseToNoon = SunriseToNoon / 100
-    NoonToSunset = NoonToSunset / 100
-    SunsetToDusk = SunsetToDusk /10
+    DawnToSunrise = DawnToSunrise
+    SunriseToNoon = SunriseToNoon
+    NoonToSunset = NoonToSunset
+    SunsetToDusk = SunsetToDusk
 
     SleepInterval = 0.01
-    MoonlightTime = 300 #14400
+    MoonlightTime = 14400
 
     print('GOOD MORNING')
 
