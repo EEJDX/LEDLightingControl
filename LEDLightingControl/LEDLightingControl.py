@@ -55,37 +55,35 @@ def DaylightSync():
     Moonlight = (MoonPhase / 28)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
-        print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
-        sleep(SecondsUntilTomorrowMorning)
-        DaylightSync()
+		print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
+		sleep(SecondsUntilTomorrowMorning)
+		DaylightSync()
 		return
     elif (TimeCheck - Sunset).total_seconds() > 1:
-        print('It is after sunset.  Running until dusk.')
+		print('It is after sunset.  Running until dusk.')
 		RunSunsetToDusk()
 		DaylightSync()
 		return
     elif (TimeCheck - Noon).total_seconds() > 1:
-        print('It is after noon.  Running until sunset.')
+		print('It is after noon.  Running until sunset.')
 		RunNoonToSunset()
 		DaylightSync()
 		return
     elif (TimeCheck - Sunrise).total_seconds() > 1:
-        print('It is after sunrise.  Running until noon.')
+		print('It is after sunrise.  Running until noon.')
 		RunSunriseToNoon()
 		DaylightSync()
 		return
     elif (TimeCheck - Dawn).total_seconds() > 1:
-        print('It is after dawn.  Running until sunrise.')
+		print('It is after dawn.  Running until sunrise.')
 		RunDawnToSunrise()
 		DaylightSync()
 		return
     else:
-        print('It is not yet dawn.  Sleeping until dawn, then running.')
-        sleep(SecondsUntilDawn)
-        DaylightSync()
+		print('It is not yet dawn.  Sleeping until dawn, then running.')
+		sleep(SecondsUntilDawn)
+		DaylightSync()
 		return
-	
-
 
 def CalculateSyncTimes():
     #Initialize
@@ -126,7 +124,7 @@ def CalculateSyncTimes():
     print('Moon Phase:    %s' % str(MoonPhase))
     print('Time Now:    %s' % str(TimeCheck))
 
-def RunFastDaylightDemo():
+#def RunFastDaylightDemo():
     #CalculateSyncTimes()
 
     #Moonlight = (MoonPhase / 28)
