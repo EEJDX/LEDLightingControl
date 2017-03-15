@@ -48,6 +48,12 @@ def DaylightSync():
     SecondsUntilDawn = (Dawn - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
     sun = city.sun(date = TimeCheck, local = True)
 
+    DawnToSunrise = (Sunrise - Dawn).total_seconds()
+    SunriseToNoon = (Noon - Sunrise).total_seconds()
+    NoonToSunset = (Sunset - Noon).total_seconds()
+    SunsetToDusk = (Dusk - Sunset).total_seconds()
+    Moonlight = (MoonPhase / 28)
+
     if (TimeCheck - Dusk).total_seconds() > 1:
         print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
         sleep(SecondsUntilTomorrowMorning)
@@ -134,8 +140,9 @@ def RunFastDaylightDemo():
 
 
 def RunDawnToSunrise():    
-    print('DawnToSunrise: %s' % str(DawnToSunrise))
-    TranslateColorToPWM(0, 0, 0)
+    DawnToSunrise = (Sunrise - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
+    print('DawnToSunrise: %s seconds' % str(DawnToSunrise))
+	TranslateColorToPWM(0, 0, 0)
     R = 150 / DawnToSunrise
     G = 150 / DawnToSunrise
     B = 200 / DawnToSunrise
@@ -148,7 +155,8 @@ def RunDawnToSunrise():
     TranslateColorToPWM(150, 150, 200)
 
 def RunSunriseToNoon():    
-    print('SunriseToNoon: %s' % str(SunriseToNoon))
+    SunriseToNoon = (Noon - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
+    print('SunriseToNoon: %s seconds' % str(SunriseToNoon))
     R = 150
     G = 150
     B = 200
@@ -161,7 +169,8 @@ def RunSunriseToNoon():
     TranslateColorToPWM(255, 255, 255)
 
 def RunNoonToSunset():    
-    print('NoonToSunset:    %s' % str(NoonToSunset))
+    NoonToSunset = (Sunset - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
+    print('NoonToSunset: %s seconds' % str(NoonToSunset))
     R = 255
     G = 255
     B = 255
@@ -174,7 +183,8 @@ def RunNoonToSunset():
     TranslateColorToPWM(200, 150, 150)
 
 def RunSunsetToDusk():    
-    print('SunsetToDusk:  %s' % str(SunsetToDusk))
+    SunsetToDusk = (Dusk - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
+    print('SunsetToDusk: %s seconds' % str(SunsetToDusk))
     R = 200
     G = 150
     B = 150
@@ -187,7 +197,7 @@ def RunSunsetToDusk():
     TranslateColorToPWM(0, 0, 0)
 
 def RunMoonlight():    
-    print('Moonlight:  %s' % str(Moonlight))
+    print('Moonlight: %s seconds' % str(Moonlight))
     R = 0
     G = 0
     B = 0
