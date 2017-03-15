@@ -14,11 +14,11 @@ BlueChannel = 17
 CurrentRedPWM = 0
 CurrentGreenPWM = 0
 CurrentBluePWM = 0
+SleepInterval = 1 #0.01 for quick demo
+
 
 def LEDLighting():
     TranslateColorToPWM(0, 0, 0)
-    #CalculateSyncTimes()
-    #RunLEDSync()
     DaylightSync()
 
 
@@ -49,30 +49,37 @@ def DaylightSync():
     sun = city.sun(date = TimeCheck, local = True)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
-        print('It is after dusk.  Sleeping until tomorrow (%s), then running LEDSync at dawn.' % str(SecondsUntilTomorrowMorning))
+        print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
         sleep(SecondsUntilTomorrowMorning)
-        CalculateSyncTimes()
-        RunLEDSync()
+        DaylightSync()
+		return
     elif (TimeCheck - Sunset).total_seconds() > 1:
-        print('It is after sunset.  Running LEDSync until dusk.')
-        CalculateSyncTimes()
-        RunLEDSync()
+        print('It is after sunset.  Running until dusk.')
+		RunSunsetToDusk()
+		DaylightSync()
+		return
     elif (TimeCheck - Noon).total_seconds() > 1:
-        print('It is after noon.  Running LEDSync until sunset.')
-        CalculateSyncTimes()
-        RunLEDSync()
+        print('It is after noon.  Running until sunset.')
+		RunNoonToSunset()
+		DaylightSync()
+		return
     elif (TimeCheck - Sunrise).total_seconds() > 1:
-        print('It is after sunrise.  Running LEDSync until noon.')
-        CalculateSyncTimes()
-        RunLEDSync()
+        print('It is after sunrise.  Running until noon.')
+		RunSunriseToNoon()
+		DaylightSync()
+		return
     elif (TimeCheck - Dawn).total_seconds() > 1:
-        print('It is after dawn.  Running LEDSync until sunrise.')
-        CalculateSyncTimes()
-        RunLEDSync()
+        print('It is after dawn.  Running until sunrise.')
+		RunDawnToSunrise()
+		DaylightSync()
+		return
     else:
-        print('It is not yet dawn.  Sleeping until dawn, then running LEDSync.')
+        print('It is not yet dawn.  Sleeping until dawn, then running.')
         sleep(SecondsUntilDawn)
-        RunLEDSync()
+        DaylightSync()
+		return
+	
+
 
 def CalculateSyncTimes():
     #Initialize
@@ -113,30 +120,22 @@ def CalculateSyncTimes():
     print('Moon Phase:    %s' % str(MoonPhase))
     print('Time Now:    %s' % str(TimeCheck))
 
-def RunLEDSync():
-    NowToDawn = (Sunrise.replace(tzinfo=None) - datetime.datetime.now().replace(tzinfo=None)).total_seconds()
-    DawnToSunrise = (Sunrise - Dawn).total_seconds()
-    SunriseToNoon = (Noon - Sunrise).total_seconds()
-    NoonToSunset = (Sunset - Noon).total_seconds()
-    SunsetToDusk = (Dusk - Sunset).total_seconds()
-    Moonlight = (MoonPhase / 28)
+def RunFastDaylightDemo():
+    #CalculateSyncTimes()
 
-    DawnToSunrise = DawnToSunrise / 10
-    SunriseToNoon = SunriseToNoon / 100
-    NoonToSunset = NoonToSunset / 100
-    SunsetToDusk = SunsetToDusk /10
+    #Moonlight = (MoonPhase / 28)
 
-    SleepInterval = 0.01
-    MoonlightTime = 300 #14400
+    #DawnToSunrise = DawnToSunrise / 10
+    #SunriseToNoon = SunriseToNoon / 100
+    #NoonToSunset = NoonToSunset / 100
+    #SunsetToDusk = SunsetToDusk /10
 
-    print('GOOD MORNING')
+    #oonlightTime = 14400 #300
 
-    TranslateColorToPWM(0, 0, 0)
-#    if (NowToDawn > 1):
-#        print('NowToDawn:    %s' % str(DawnToSunrise))
-#        time.sleep(NowToDawn)
-    
+
+def RunDawnToSunrise():    
     print('DawnToSunrise: %s' % str(DawnToSunrise))
+    TranslateColorToPWM(0, 0, 0)
     R = 150 / DawnToSunrise
     G = 150 / DawnToSunrise
     B = 200 / DawnToSunrise
@@ -148,6 +147,7 @@ def RunLEDSync():
         sleep(SleepInterval)
     TranslateColorToPWM(150, 150, 200)
 
+def RunSunriseToNoon():    
     print('SunriseToNoon: %s' % str(SunriseToNoon))
     R = 150
     G = 150
@@ -160,6 +160,7 @@ def RunLEDSync():
         sleep(SleepInterval)
     TranslateColorToPWM(255, 255, 255)
 
+def RunNoonToSunset():    
     print('NoonToSunset:    %s' % str(NoonToSunset))
     R = 255
     G = 255
@@ -172,6 +173,7 @@ def RunLEDSync():
         sleep(SleepInterval)
     TranslateColorToPWM(200, 150, 150)
 
+def RunSunsetToDusk():    
     print('SunsetToDusk:  %s' % str(SunsetToDusk))
     R = 200
     G = 150
@@ -184,6 +186,7 @@ def RunLEDSync():
         sleep(SleepInterval)
     TranslateColorToPWM(0, 0, 0)
 
+def RunMoonlight():    
     print('Moonlight:  %s' % str(Moonlight))
     R = 0
     G = 0
@@ -202,80 +205,10 @@ def RunLEDSync():
         sleep(SleepInterval)
     TranslateColorToPWM(0, 0, 0)
     
-    print('GOOD NIGHT')
-
-  
-
-def TestAstral():
-    a = Astral()
-    a.solar_depression = 'civil'
-
-    city = a[city_name]
-
-    print('Information for %s/%s\n' % (city_name, city.region))
-
-    timezone = city.timezone
-    print('Timezone: %s' % timezone)
-
-    print('Latitude: %.02f; Longitude: %.02f\n' % \
-    (city.latitude, city.longitude))
-
-    sun = city.sun(date = datetime.date(2016,12,1), local = True)
-    print('Dawn:    %s' % str(sun['dawn']))
-    print('Sunrise: %s' % str(sun['sunrise']))
-    print('Noon:    %s' % str(sun['noon']))
-    print('Sunset:  %s' % str(sun['sunset']))
-    print('Dusk:    %s' % str(sun['dusk']))
-
-def TestPySolar():
-    dt = datetime.datetime.now()
-    #dt = datetime.datetime(2007, 2, 18, 15, 13, 1, 130320)
-    altitude_deg = get_altitude(latitude_deg, longitude_deg, dt)
-    azimuth_deg = get_azimuth(latitude_deg, longitude_deg, dt)
-    insolation = radiation.get_radiation_direct(dt, altitude_deg)
-    print("DateTime: " + str(dt))
-    print("Altitude: " + str(altitude_deg))
-    print("Azimuth: " + str(azimuth_deg))
-    print("Radiation: " + str(insolation))
-
-    dt = datetime.datetime(2016, 11, 24, 19, 00, 0, 130320)
-    altitude_deg = get_altitude(latitude_deg, longitude_deg, dt)
-    azimuth_deg = get_azimuth(latitude_deg, longitude_deg, dt)
-    insolation = radiation.get_radiation_direct(dt, altitude_deg)
-    print("DateTime: " + str(dt))
-    print("Altitude: " + str(altitude_deg))
-    print("Azimuth: " + str(azimuth_deg))
-    print("Radiation: " + str(insolation))
-
-    dt = datetime.datetime(2016, 11, 25, 5, 13, 1, 130320)
-    altitude_deg = get_altitude(latitude_deg, longitude_deg, dt)
-    azimuth_deg = get_azimuth(latitude_deg, longitude_deg, dt)
-    insolation = radiation.get_radiation_direct(dt, altitude_deg)
-    print("DateTime: " + str(dt))
-    print("Altitude: " + str(altitude_deg))
-    print("Azimuth: " + str(azimuth_deg))
-    print("Radiation: " + str(insolation))
-
-    dt = datetime.datetime(2016, 11, 25, 12, 13, 1, 130320)
-    altitude_deg = get_altitude(latitude_deg, longitude_deg, dt)
-    azimuth_deg = get_azimuth(latitude_deg, longitude_deg, dt)
-    insolation = radiation.get_radiation_direct(dt, altitude_deg)
-    print("DateTime: " + str(dt))
-    print("Altitude: " + str(altitude_deg))
-    print("Azimuth: " + str(azimuth_deg))
-    print("Radiation: " + str(insolation))
-
-    #TranslateColorToPWM(255, 255, 255)
-    #TranslateColorToPWM(255, 0, 255)
-    #TranslateColorToPWM(255, 255, 0)
-    #TranslateColorToPWM(0, 255, 255)
-    #TranslateColorToPWM(0, 0, 0)
-
 def TranslateColorToPWM(RedVal, GreenVal, BlueVal):
     SetColor(RedChannel, RedVal/255.0)
     SetColor(GreenChannel, GreenVal/255.0)
     SetColor(BlueChannel, BlueVal/255.0)
-
 
 def FadeColors(RedVal, GreenVal, BlueVal):
     global CurrentRedPWM
@@ -319,7 +252,6 @@ def FadeColors(RedVal, GreenVal, BlueVal):
                     CurrentBluePWM = BlueVal
                 SetColor(BlueChannel, float(CurrentBluePWM)/255.0)
             time.sleep(1.0/255.0)
-
 
 def SetColor(Channel, PWMVal):
     os.system('echo "' + str(Channel) + '=' + str(PWMVal) + '" > /dev/pi-blaster') 
