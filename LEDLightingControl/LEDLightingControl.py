@@ -62,6 +62,7 @@ def DaylightSync():
     elif (TimeCheck - Sunset).total_seconds() > 1:
       print('It is after sunset.  Running until dusk.')
       RunSunsetToDusk()
+	  RunMoonlight()
       DaylightSync()
       return
     elif (TimeCheck - Noon).total_seconds() > 1:
@@ -196,7 +197,8 @@ def RunSunsetToDusk():
 
 def RunMoonlight():    
     print('Moonlight: %s seconds' % str(Moonlight))
-    R = 0
+    MoonlightTime = 14400
+	R = 0
     G = 0
     B = 0
     for i in range(1, int(MoonlightTime / 2)): #2 hours of increasing moonlight
