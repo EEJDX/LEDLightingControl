@@ -55,35 +55,35 @@ def DaylightSync():
     Moonlight = (MoonPhase / 28)
 
     if (TimeCheck - Dusk).total_seconds() > 1:
-        print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
-        sleep(SecondsUntilTomorrowMorning)
-        DaylightSync()
-        return
+		print('It is after dusk.  Sleeping for (%s seconds), then running at dawn.' % str(SecondsUntilTomorrowMorning))
+		sleep(SecondsUntilTomorrowMorning)
+		DaylightSync()
+		return
     elif (TimeCheck - Sunset).total_seconds() > 1:
-        print('It is after sunset.  Running until dusk.')
-        RunSunsetToDusk()
-        DaylightSync()
-        return
+		print('It is after sunset.  Running until dusk.')
+		RunSunsetToDusk()
+		DaylightSync()
+		return
     elif (TimeCheck - Noon).total_seconds() > 1:
-        print('It is after noon.  Running until sunset.')
-        RunNoonToSunset()
-        DaylightSync()
-        return
+		print('It is after noon.  Running until sunset.')
+		RunNoonToSunset()
+		DaylightSync()
+		return
     elif (TimeCheck - Sunrise).total_seconds() > 1:
-        print('It is after sunrise.  Running until noon.')
-        RunSunriseToNoon()
-        DaylightSync()
-        return
+		print('It is after sunrise.  Running until noon.')
+		RunSunriseToNoon()
+		DaylightSync()
+		return
     elif (TimeCheck - Dawn).total_seconds() > 1:
-        print('It is after dawn.  Running until sunrise.')
-        RunDawnToSunrise()
-        DaylightSync()
-        return
+		print('It is after dawn.  Running until sunrise.')
+		RunDawnToSunrise()
+		DaylightSync()
+		return
     else:
-        print('It is not yet dawn.  Sleeping until dawn, then running.')
-        sleep(SecondsUntilDawn)
-        DaylightSync()
-        return
+		print('It is not yet dawn.  Sleeping until dawn, then running.')
+		sleep(SecondsUntilDawn)
+		DaylightSync()
+		return
 
 def CalculateSyncTimes():
     #Initialize
@@ -134,13 +134,13 @@ def CalculateSyncTimes():
     #NoonToSunset = NoonToSunset / 100
     #SunsetToDusk = SunsetToDusk /10
 
-    #oonlightTime = 14400 #300
+    #MoonlightTime = 14400 #300
 
 
 def RunDawnToSunrise():    
     DawnToSunrise = (Sunrise - datetime.datetime.now(pytz.timezone('US/Central'))).total_seconds()
     print('DawnToSunrise: %s seconds' % str(DawnToSunrise))
-    TranslateColorToPWM(0, 0, 0)
+	TranslateColorToPWM(0, 0, 0)
     R = 150 / DawnToSunrise
     G = 150 / DawnToSunrise
     B = 200 / DawnToSunrise
@@ -186,11 +186,11 @@ def RunSunsetToDusk():
     R = 200
     G = 150
     B = 150
-    for i in range(1, int(NoonToSunset)):
+    for i in range(1, int(SunsetToDusk)):
         TranslateColorToPWM(R, G, B)
-        R = R - ((200 - 0) / NoonToSunset)
-        G = G - ((150 - 0) / NoonToSunset)
-        B = B - ((150 - 0) / NoonToSunset)
+        R = R - ((200 - 0) / SunsetToDusk)
+        G = G - ((150 - 0) / SunsetToDusk)
+        B = B - ((150 - 0) / SunsetToDusk)
         sleep(SleepInterval)
     TranslateColorToPWM(0, 0, 0)
 
