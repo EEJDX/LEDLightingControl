@@ -14,7 +14,7 @@ BlueChannel = 17
 CurrentRedPWM = 0
 CurrentGreenPWM = 0
 CurrentBluePWM = 0
-SleepInterval = 1 #0.01 for quick demo
+SleepInterval = 0.9 #0.01 for quick demo
 
 
 def LEDLighting():
@@ -198,7 +198,7 @@ def RunSunsetToDusk():
 def RunMoonlight():    
     Moonlight = (MoonPhase / 28)
     MoonlightTime = 14400
-    print('Moonlight: %s seconds' % str(Moonlight))
+    print('Moonlight intensity: %s%' % str(Moonlight * 100))
     R = 0
     G = 0
     B = 0
